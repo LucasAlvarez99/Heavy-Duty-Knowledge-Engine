@@ -1,0 +1,18 @@
+/* Estilos globales minimos. El sistema de diseno (colores, espaciado, grillas,
+   componentes) vive en Bootstrap. Este archivo solo cubre lo que Bootstrap
+   no resuelve por si mismo. */
+
+body {
+  min-height: 100vh;
+  background-color: #f5f6f8;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+}
