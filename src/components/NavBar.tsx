@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { useAuth } from '../infrastructure/auth/AuthProvider'
+import { useAuth } from '../hooks/useAuth'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `nav-link${isActive ? ' active' : ''}`
@@ -38,6 +38,16 @@ export function NavBar() {
               <li className="nav-item">
                 <NavLink to="/perfil" className={linkClass}>
                   Perfil
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/rutinas" className={linkClass}>
+                  Rutinas
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/entrenamientos" className={linkClass}>
+                  Entrenamientos
                 </NavLink>
               </li>
               <li className="nav-item">

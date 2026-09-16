@@ -1,28 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useAsyncData } from '../../hooks/useAsyncData'
 import { listExercises } from '../../infrastructure/database/exerciseRepository'
 import type { Exercise } from '../../domain/training/exercise'
 
 export function ExercisesPage() {
-  const [exercises, setExercises] = useState<Exercise[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    listExercises()
-      .then((data) => {
-        if (!cancelled) setExercises(data)
-      })
-      .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : String(err))
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const {
+    data: exercises,
+    loading,
+    error,
+  } = useAsyncData<Exercise[]>(listExercises, [], [])
 
   return (
     <div className="container py-4">

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../infrastructure/auth/AuthProvider'
+import { useAuth } from '../../hooks/useAuth'
 
 export function LoginPage() {
   const { signInWithPassword } = useAuth()

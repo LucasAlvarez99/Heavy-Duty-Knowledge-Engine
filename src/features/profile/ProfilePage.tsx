@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useAuth } from '../../infrastructure/auth/AuthProvider'
+import { useAuth } from '../../hooks/useAuth'
+import { useAsyncData } from '../../hooks/useAsyncData'
 import {
   getAthleteProfile,
   upsertAthleteProfile,
 } from '../../infrastructure/database/athleteProfileRepository'
+import type { AthleteProfileRow } from '../../infrastructure/database/athleteProfileRepository'
 import type { AthleteProfileInput } from '../../domain/training/athleteProfile'
 import {
   EXPERIENCE_LEVEL_LABEL,
@@ -25,32 +27,30 @@ const EMPTY_FORM: AthleteProfileInput = {
 export function ProfilePage() {
   const { user } = useAuth()
   const [form, setForm] = useState<AthleteProfileInput>(EMPTY_FORM)
-  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [savedAt, setSavedAt] = useState<Date | null>(null)
 
+  const {
+    data: existingProfile,
+    loading,
+    error: loadError,
+  } = useAsyncData<AthleteProfileRow | null>(
+    () => (user ? getAthleteProfile(user.id) : Promise.resolve(null)),
+    [user],
+    null,
+  )
+
+  // Sincroniza el estado editable del formulario con el perfil recien
+  // llegado del servidor. Es una excepcion valida al patron "derivar en
+  // render": `form` es editable por el usuario, no puede recalcularse en
+  // cada render a partir de `existingProfile`.
   useEffect(() => {
-    if (!user) return
-    let cancelled = false
-
-    getAthleteProfile(user.id)
-      .then((profile) => {
-        if (cancelled) return
-        if (profile) {
-          const { id: _id, userId: _userId, ...rest } = profile
-          setForm(rest)
-        }
-      })
-      .catch((err) => setError(err instanceof Error ? err.message : String(err)))
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [user])
+    if (!existingProfile) return
+    const { id: _id, userId: _userId, ...rest } = existingProfile
+    // oxlint-disable-next-line react/set-state-in-effect
+    setForm(rest)
+  }, [existingProfile])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -72,6 +72,16 @@ export function ProfilePage() {
       <div className="container py-5 text-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando perfil...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <div className="container py-5" style={{ maxWidth: 640 }}>
+        <div className="alert alert-danger" role="alert">
+          No se pudo cargar el perfil: {loadError}
         </div>
       </div>
     )

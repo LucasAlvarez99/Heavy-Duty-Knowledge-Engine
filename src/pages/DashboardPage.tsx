@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '../infrastructure/auth/AuthProvider'
+import { useAuth } from '../hooks/useAuth'
 
 export function DashboardPage() {
   const { user } = useAuth()
@@ -8,11 +8,43 @@ export function DashboardPage() {
     <div className="container py-4">
       <h1 className="h3 mb-1">Hola{user?.email ? `, ${user.email}` : ''}</h1>
       <p className="text-body-secondary mb-4">
-        Este es el panel base de la Fase 1. Los motores de progreso, recuperacion y nutricion se
+        Este es el panel base de la Fase 2. Los motores de progreso, recuperacion y nutricion se
         conectan aca a partir de la Fase 4 en adelante.
       </p>
 
       <div className="row g-3">
+        <div className="col-md-6">
+          <div className="card h-100">
+            <div className="card-body">
+              <h2 className="h5 card-title">
+                <i className="bi bi-clipboard2-pulse me-2" aria-hidden="true" />
+                Rutinas
+              </h2>
+              <p className="card-text">Crear y editar tus rutinas de entrenamiento.</p>
+              <Link to="/rutinas" className="btn btn-outline-primary btn-sm">
+                Ver rutinas
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card h-100">
+            <div className="card-body">
+              <h2 className="h5 card-title">
+                <i className="bi bi-journal-check me-2" aria-hidden="true" />
+                Entrenamientos
+              </h2>
+              <p className="card-text">
+                Registrar un entrenamiento nuevo y revisar el historial de sesiones pasadas.
+              </p>
+              <Link to="/entrenamientos" className="btn btn-outline-primary btn-sm">
+                Ver historial
+              </Link>
+            </div>
+          </div>
+        </div>
+
         <div className="col-md-6">
           <div className="card h-100">
             <div className="card-body">
