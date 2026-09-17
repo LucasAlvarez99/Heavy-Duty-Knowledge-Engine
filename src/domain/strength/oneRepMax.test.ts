@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { compareFormulas, estimateOneRepMax, intensityTable, loadForPercentage } from './oneRepMax'
+import {
+  bestEstimateFromSets,
+  compareFormulas,
+  estimateOneRepMax,
+  intensityTable,
+  isNewPersonalRecord,
+  loadForPercentage,
+} from './oneRepMax'
 
 describe('estimateOneRepMax', () => {
   it('calcula e1RM con la formula de Epley', () => {
@@ -40,5 +47,44 @@ describe('intensityTable', () => {
     expect(table).toHaveLength(9)
     expect(table[0]).toEqual({ percentage: 50, weightKg: 50 })
     expect(table.at(-1)).toEqual({ percentage: 100, weightKg: 100 })
+  })
+})
+
+describe('isNewPersonalRecord', () => {
+  it('la primera marca siempre es PR', () => {
+    expect(isNewPersonalRecord(80, null)).toBe(true)
+  })
+
+  it('es PR si supera el mejor historico', () => {
+    expect(isNewPersonalRecord(101, 100)).toBe(true)
+  })
+
+  it('no es PR si iguala o queda por debajo del mejor historico', () => {
+    expect(isNewPersonalRecord(100, 100)).toBe(false)
+    expect(isNewPersonalRecord(90, 100)).toBe(false)
+  })
+})
+
+describe('bestEstimateFromSets', () => {
+  it('devuelve el e1RM mas alto entre varias series', () => {
+    const sets = [
+      { weightKg: 80, repetitions: 8 },
+      { weightKg: 100, repetitions: 3 },
+      { weightKg: 60, repetitions: 12 },
+    ]
+    const best = bestEstimateFromSets(sets)
+    expect(best).toBeCloseTo(estimateOneRepMax({ weightKg: 100, repetitions: 3 }), 5)
+  })
+
+  it('ignora series con peso o repeticiones invalidas', () => {
+    const sets = [
+      { weightKg: 0, repetitions: 8 },
+      { weightKg: 80, repetitions: 0 },
+    ]
+    expect(bestEstimateFromSets(sets)).toBeNull()
+  })
+
+  it('devuelve null para una lista vacia', () => {
+    expect(bestEstimateFromSets([])).toBeNull()
   })
 })

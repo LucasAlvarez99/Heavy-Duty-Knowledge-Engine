@@ -49,6 +49,23 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
+                <i className="bi bi-graph-up-arrow me-2" aria-hidden="true" />
+                Fuerza
+              </h2>
+              <p className="card-text">
+                1RM real y estimado por ejercicio, deteccion automatica de PRs y tabla de %1RM.
+              </p>
+              <Link to="/fuerza" className="btn btn-outline-primary btn-sm">
+                Ver fuerza
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card h-100">
+            <div className="card-body">
+              <h2 className="h5 card-title">
                 <i className="bi bi-person-vcard me-2" aria-hidden="true" />
                 Perfil del atleta
               </h2>

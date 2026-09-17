@@ -6,6 +6,8 @@ import { useAsyncData } from '../../hooks/useAsyncData'
 import { listExercises } from '../../infrastructure/database/exerciseRepository'
 import { getRoutineWithExercises, listRoutines } from '../../infrastructure/database/routineRepository'
 import { createWorkout } from '../../infrastructure/database/workoutRepository'
+import { detectAndRecordPersonalRecords } from '../../services/strengthService'
+import type { PersonalRecordResult } from '../../services/strengthService'
 import { validateWorkoutInput } from '../../domain/training/workout'
 import type { SetInput, WorkoutExerciseInput, WorkoutInput } from '../../domain/training/workout'
 import type { Exercise } from '../../domain/training/exercise'
@@ -39,6 +41,7 @@ export function WorkoutLoggerPage() {
   const [formErrors, setFormErrors] = useState<string[]>([])
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [newRecords, setNewRecords] = useState<PersonalRecordResult[] | null>(null)
 
   const { data: routines } = useAsyncData<Routine[]>(
     () => (user ? listRoutines(user.id) : Promise.resolve([])),
@@ -151,8 +154,13 @@ export function WorkoutLoggerPage() {
     setSaving(true)
     setSubmitError(null)
     try {
-      await createWorkout(user.id, input)
-      navigate('/entrenamientos')
+      const workout = await createWorkout(user.id, input)
+      const records = await detectAndRecordPersonalRecords(user.id, input.date, workout.exercises)
+      if (records.length > 0) {
+        setNewRecords(records)
+      } else {
+        navigate('/entrenamientos')
+      }
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -164,6 +172,27 @@ export function WorkoutLoggerPage() {
     <div className="container py-4" style={{ maxWidth: 900 }}>
       <h1 className="h3 mb-4">Registrar entrenamiento</h1>
 
+      {newRecords && newRecords.length > 0 && (
+        <div className="alert alert-success" role="status">
+          <h2 className="h5">
+            <i className="bi bi-trophy-fill me-2" aria-hidden="true" />
+            Nuevo record personal
+          </h2>
+          <ul className="mb-3">
+            {newRecords.map((record) => (
+              <li key={record.exerciseId}>
+                {exerciseName(record.exerciseId)}: <strong>{record.weightKg} kg</strong> (e1RM estimado)
+              </li>
+            ))}
+          </ul>
+          <button type="button" className="btn btn-success btn-sm" onClick={() => navigate('/entrenamientos')}>
+            Ver historial
+          </button>
+        </div>
+      )}
+
+      {!newRecords && (
+      <>
       <div className="row g-3 mb-4">
         <div className="col-md-5">
           <label htmlFor="date" className="form-label">
@@ -403,6 +432,8 @@ export function WorkoutLoggerPage() {
           {saving ? 'Guardando...' : 'Guardar entrenamiento'}
         </button>
       </form>
+      </>
+      )}
     </div>
   )
 }

@@ -17,3 +17,13 @@ export interface IntensityZone {
   minPercentage: number
   maxPercentage: number
 }
+
+export interface OneRmRecord {
+  id: string
+  userId: string
+  exerciseId: string
+  weightKg: number
+  type: OneRmSource
+  formula: EstimationFormula | null
+  date: string
+}

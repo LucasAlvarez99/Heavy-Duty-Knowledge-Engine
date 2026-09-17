@@ -80,3 +80,31 @@ export function intensityTable(oneRmKg: number): { percentage: number; weightKg:
     weightKg: loadForPercentage(oneRmKg, percentage),
   }))
 }
+
+/**
+ * Un nuevo record personal es cualquier estimacion/medicion que supere al
+ * mejor 1RM conocido para ese ejercicio. Si no hay historial previo, la
+ * primera marca siempre es PR (es el punto de partida).
+ */
+export function isNewPersonalRecord(candidateKg: number, previousBestKg: number | null): boolean {
+  if (previousBestKg === null) return true
+  return candidateKg > previousBestKg
+}
+
+/**
+ * De un conjunto de series de un mismo ejercicio (por ejemplo, todas las
+ * series registradas en un entrenamiento), devuelve el e1RM mas alto usando
+ * la formula indicada. Ignora series invalidas en lugar de romper: una
+ * serie de calentamiento con peso 0 no deberia tirar abajo todo el calculo.
+ */
+export function bestEstimateFromSets(
+  sets: SetPerformance[],
+  formula: EstimationFormula = 'epley',
+): number | null {
+  const estimates = sets
+    .filter((set) => set.weightKg > 0 && set.repetitions > 0)
+    .map((set) => estimateOneRepMax(set, formula))
+
+  if (estimates.length === 0) return null
+  return Math.max(...estimates)
+}

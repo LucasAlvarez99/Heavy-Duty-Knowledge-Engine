@@ -33,6 +33,14 @@ const WorkoutHistoryPage = lazy(() =>
 const WorkoutDetailPage = lazy(() =>
   import('./features/workouts/WorkoutDetailPage').then((m) => ({ default: m.WorkoutDetailPage })),
 )
+const StrengthPage = lazy(() =>
+  import('./features/oneRM/StrengthPage').then((m) => ({ default: m.StrengthPage })),
+)
+const ExerciseStrengthDetailPage = lazy(() =>
+  import('./features/oneRM/ExerciseStrengthDetailPage').then((m) => ({
+    default: m.ExerciseStrengthDetailPage,
+  })),
+)
 const DashboardPage = lazy(() =>
   import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
 )
@@ -128,6 +136,22 @@ function App() {
                 element={
                   <RequireAuth>
                     <WorkoutDetailPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/fuerza"
+                element={
+                  <RequireAuth>
+                    <StrengthPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/fuerza/:exerciseId"
+                element={
+                  <RequireAuth>
+                    <ExerciseStrengthDetailPage />
                   </RequireAuth>
                 }
               />
