@@ -6,8 +6,8 @@ import { useAuth } from '../../hooks/useAuth'
 import { useAsyncData } from '../../hooks/useAsyncData'
 import { listExercises } from '../../infrastructure/database/exerciseRepository'
 import { createOneRmRecord, listOneRmHistory } from '../../infrastructure/database/oneRmRepository'
-import { intensityTable } from '../../domain/strength/oneRepMax'
-import type { OneRmRecord } from '../../domain/strength/types'
+import { intensityTable, compareFormulas } from '../../domain/strength/oneRepMax'
+import type { EstimationFormula, OneRmRecord } from '../../domain/strength/types'
 import type { Exercise } from '../../domain/training/exercise'
 
 function today(): string {
@@ -23,6 +23,8 @@ export function ExerciseStrengthDetailPage() {
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [manualAdditions, setManualAdditions] = useState<OneRmRecord[]>([])
+  const [comparisonWeight, setComparisonWeight] = useState('')
+  const [comparisonReps, setComparisonReps] = useState('')
 
   const { data: exercises } = useAsyncData<Exercise[]>(listExercises, [], [])
   const exercise = exercises.find((item) => item.id === exerciseId)
@@ -44,6 +46,16 @@ export function ExerciseStrengthDetailPage() {
     if (record.type === max.type && record.weightKg > max.weightKg) return record
     return max
   }, null)
+
+  const comparisonWeightKg = Number(comparisonWeight)
+  const comparisonRepsCount = Number(comparisonReps)
+  const formulaComparison =
+    Number.isFinite(comparisonWeightKg) &&
+    comparisonWeightKg > 0 &&
+    Number.isFinite(comparisonRepsCount) &&
+    comparisonRepsCount > 0
+      ? compareFormulas({ weightKg: comparisonWeightKg, repetitions: comparisonRepsCount })
+      : null
 
   async function handleManualSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -196,6 +208,66 @@ export function ExerciseStrengthDetailPage() {
               </button>
             </div>
           </form>
+
+          <h2 className="h5 mb-3">Comparar formulas de e1RM</h2>
+          <p className="text-body-secondary small">
+            Epley, Brzycki y Lombardi estiman distinto para el mismo peso x reps. Ninguna es "la
+            correcta": sirven para ver el rango probable, sobre todo con series de muchas
+            repeticiones, donde las formulas divergen mas.
+          </p>
+          <div className="row g-2 mb-3">
+            <div className="col-6">
+              <label htmlFor="comparisonWeight" className="form-label small">
+                Peso (kg)
+              </label>
+              <input
+                id="comparisonWeight"
+                type="number"
+                min={1}
+                step="0.5"
+                className="form-control"
+                value={comparisonWeight}
+                onChange={(event) => setComparisonWeight(event.target.value)}
+              />
+            </div>
+            <div className="col-6">
+              <label htmlFor="comparisonReps" className="form-label small">
+                Repeticiones
+              </label>
+              <input
+                id="comparisonReps"
+                type="number"
+                min={1}
+                max={20}
+                className="form-control"
+                value={comparisonReps}
+                onChange={(event) => setComparisonReps(event.target.value)}
+              />
+            </div>
+          </div>
+
+          {formulaComparison && (
+            <div className="table-responsive mb-4">
+              <table className="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">Formula</th>
+                    <th scope="col">e1RM estimado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(Object.entries(formulaComparison) as [EstimationFormula, number][]).map(
+                    ([formula, weightKg]) => (
+                      <tr key={formula}>
+                        <td className="text-capitalize">{formula}</td>
+                        <td>{weightKg} kg</td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {best && (
             <>
