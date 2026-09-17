@@ -9,6 +9,7 @@ export interface AthleteProfileRow extends AthleteProfileInput {
 interface AthleteProfileDbRow {
   id: string
   user_id: string
+  display_name: string | null
   birth_date: string
   height_cm: number
   weight_kg: number
@@ -23,6 +24,7 @@ function fromDbRow(row: AthleteProfileDbRow): AthleteProfileRow {
   return {
     id: row.id,
     userId: row.user_id,
+    displayName: row.display_name ?? '',
     birthDate: row.birth_date,
     heightCm: row.height_cm,
     weightKg: row.weight_kg,
@@ -56,6 +58,7 @@ export async function upsertAthleteProfile(
     .upsert(
       {
         user_id: userId,
+        display_name: input.displayName,
         birth_date: input.birthDate,
         height_cm: input.heightCm,
         weight_kg: input.weightKg,

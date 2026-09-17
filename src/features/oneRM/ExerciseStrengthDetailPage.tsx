@@ -125,14 +125,19 @@ export function ExerciseStrengthDetailPage() {
             <div style={{ width: '100%', height: 260 }}>
               <ResponsiveContainer>
                 <LineChart data={fullHistory.map((r) => ({ date: r.date, weightKg: r.weightKg }))}>
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                  <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9d98a6' }} stroke="#33313b" />
                   <YAxis
-                    tick={{ fontSize: 12 }}
+                    tick={{ fontSize: 12, fill: '#9d98a6' }}
+                    stroke="#33313b"
                     domain={['dataMin - 5', 'dataMax + 5']}
                     unit=" kg"
                   />
-                  <Tooltip formatter={(value) => [`${value} kg`, '1RM']} />
-                  <Line type="monotone" dataKey="weightKg" stroke="#0d6efd" strokeWidth={2} dot />
+                  <Tooltip
+                    formatter={(value) => [`${value} kg`, '1RM']}
+                    contentStyle={{ background: '#1c1a21', border: '1px solid #33313b', borderRadius: 6 }}
+                    labelStyle={{ color: '#f3f1ec' }}
+                  />
+                  <Line type="monotone" dataKey="weightKg" stroke="#ff4b2e" strokeWidth={2} dot />
                 </LineChart>
               </ResponsiveContainer>
             </div>

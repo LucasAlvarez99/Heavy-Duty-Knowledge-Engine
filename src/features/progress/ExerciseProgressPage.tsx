@@ -138,10 +138,19 @@ export function ExerciseProgressPage() {
         <div style={{ width: '100%', height: 260 }}>
           <ResponsiveContainer>
             <LineChart data={chartData}>
-              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} domain={['dataMin - 5', 'dataMax + 5']} unit=" kg" />
-              <Tooltip formatter={(value) => [`${value} kg`, 'e1RM']} />
-              <Line type="monotone" dataKey="e1rm" stroke="#198754" strokeWidth={2} dot />
+              <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#9d98a6' }} stroke="#33313b" />
+              <YAxis
+                tick={{ fontSize: 12, fill: '#9d98a6' }}
+                stroke="#33313b"
+                domain={['dataMin - 5', 'dataMax + 5']}
+                unit=" kg"
+              />
+              <Tooltip
+                formatter={(value) => [`${value} kg`, 'e1RM']}
+                contentStyle={{ background: '#1c1a21', border: '1px solid #33313b', borderRadius: 6 }}
+                labelStyle={{ color: '#f3f1ec' }}
+              />
+              <Line type="monotone" dataKey="e1rm" stroke="#33c17a" strokeWidth={2} dot />
             </LineChart>
           </ResponsiveContainer>
         </div>

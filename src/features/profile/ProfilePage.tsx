@@ -11,9 +11,11 @@ import type { AthleteProfileInput } from '../../domain/training/athleteProfile'
 import {
   EXPERIENCE_LEVEL_LABEL,
   TRAINING_GOAL_LABEL,
+  fallbackDisplayName,
 } from '../../domain/training/athleteProfile'
 
 const EMPTY_FORM: AthleteProfileInput = {
+  displayName: '',
   birthDate: '',
   heightCm: 170,
   weightKg: 70,
@@ -46,11 +48,20 @@ export function ProfilePage() {
   // render": `form` es editable por el usuario, no puede recalcularse en
   // cada render a partir de `existingProfile`.
   useEffect(() => {
-    if (!existingProfile) return
-    const { id: _id, userId: _userId, ...rest } = existingProfile
-    // oxlint-disable-next-line react/set-state-in-effect
-    setForm(rest)
-  }, [existingProfile])
+    if (existingProfile) {
+      const { id: _id, userId: _userId, ...rest } = existingProfile
+      // oxlint-disable-next-line react/set-state-in-effect
+      setForm({ ...rest, displayName: rest.displayName || fallbackDisplayName(user?.email) })
+      return
+    }
+    if (!loading && user) {
+      // oxlint-disable-next-line react/set-state-in-effect
+      setForm((prev) => ({
+        ...prev,
+        displayName: prev.displayName || fallbackDisplayName(user.email),
+      }))
+    }
+  }, [existingProfile, loading, user])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -89,9 +100,34 @@ export function ProfilePage() {
 
   return (
     <div className="container py-4" style={{ maxWidth: 640 }}>
-      <h1 className="h3 mb-4">Perfil del atleta</h1>
+      <h1 className="h3 mb-4">Tu perfil</h1>
 
       <form onSubmit={handleSubmit} className="row g-3">
+        <div className="col-12">
+          <h2 className="h6 text-uppercase text-body-secondary mb-2">Identidad</h2>
+        </div>
+
+        <div className="col-12">
+          <label htmlFor="displayName" className="form-label">
+            Nombre de usuario
+          </label>
+          <input
+            id="displayName"
+            type="text"
+            className="form-control"
+            placeholder="Como queres que te llamemos"
+            value={form.displayName}
+            onChange={(event) => setForm({ ...form, displayName: event.target.value })}
+            maxLength={60}
+            required
+          />
+          <div className="form-text">Es lo que se muestra en el panel y el menu, en vez de tu email.</div>
+        </div>
+
+        <div className="col-12 mt-4">
+          <h2 className="h6 text-uppercase text-body-secondary mb-2">Datos fisicos</h2>
+        </div>
+
         <div className="col-md-6">
           <label htmlFor="birthDate" className="form-label">
             Fecha de nacimiento
@@ -137,6 +173,10 @@ export function ProfilePage() {
             onChange={(event) => setForm({ ...form, weightKg: Number(event.target.value) })}
             required
           />
+        </div>
+
+        <div className="col-12 mt-4">
+          <h2 className="h6 text-uppercase text-body-secondary mb-2">Entrenamiento</h2>
         </div>
 
         <div className="col-md-6">

@@ -1,10 +1,56 @@
-/* Estilos globales minimos. El sistema de diseno (colores, espaciado, grillas,
-   componentes) vive en Bootstrap. Este archivo solo cubre lo que Bootstrap
-   no resuelve por si mismo. */
+/* ============================================================
+   Heavy Duty — sistema de diseno
+   ============================================================
+   Identidad: sala de pesas + precision analitica. Fondo oscuro tipo
+   "gimnasio de noche", acento rojo-naranja de "placa bajo tension",
+   tipografia condensada (Oswald) para titulos y Inter para el cuerpo
+   y los datos densos (kg, %, series).
+
+   Se apoya en el modo oscuro nativo de Bootstrap 5.3 (data-bs-theme="dark"
+   en <html>), que ya resuelve formularios, tablas, dropdowns y modales de
+   forma consistente. Este archivo solo redefine los tokens de marca
+   (colores, tipografia, radios) encima de esa base, no reinventa
+   Bootstrap component por componente. */
+
+:root,
+[data-bs-theme='dark'] {
+  --bs-body-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --bs-body-bg: #131217;
+  --bs-body-bg-rgb: 19, 18, 23;
+  --bs-tertiary-bg: #1c1a21;
+  --bs-secondary-bg: #1c1a21;
+  --bs-border-color: #322f39;
+  --bs-border-color-translucent: #322f39;
+
+  --bs-primary: #ff4b2e;
+  --bs-primary-rgb: 255, 75, 46;
+  --bs-primary-text-emphasis: #ff8266;
+  --bs-primary-bg-subtle: #3a1c14;
+  --bs-primary-border-subtle: #5c2a1c;
+
+  --bs-success: #33c17a;
+  --bs-success-rgb: 51, 193, 122;
+  --bs-warning: #f5b94d;
+  --bs-warning-rgb: 245, 185, 77;
+  --bs-danger: #ff5470;
+  --bs-danger-rgb: 255, 84, 112;
+  --bs-info: #3da9e0;
+  --bs-info-rgb: 61, 169, 224;
+
+  --bs-link-color: var(--bs-primary);
+  --bs-link-color-rgb: var(--bs-primary-rgb);
+  --bs-link-hover-color: #ff8266;
+  --bs-link-hover-color-rgb: 255, 130, 102;
+
+  --bs-border-radius-sm: 0.2rem;
+  --bs-border-radius: 0.3rem;
+  --bs-border-radius-lg: 0.45rem;
+
+  --hd-font-display: 'Oswald', 'Inter', system-ui, sans-serif;
+}
 
 body {
   min-height: 100vh;
-  background-color: #f5f6f8;
 }
 
 .app-shell {
@@ -15,4 +61,87 @@ body {
 
 .app-main {
   flex: 1;
+}
+
+/* Titulos: tipografia condensada, es la marca del identidad visual. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--hd-font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Numeros (kg, %, series) alineados con cifras tabulares para que las
+   tablas de datos densos (historial, tabla de %1RM) se lean en columna
+   recta, sin cambiar de tipografia. */
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------
+   Navbar / marca
+   --------------------------------------------------------------- */
+.hd-navbar {
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.hd-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--hd-font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.hd-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--bs-border-radius-sm);
+  background: var(--bs-primary);
+  color: #131217;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.hd-brand-name {
+  color: #f3f1ec;
+}
+
+.navbar-dark .nav-link.active {
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--bs-primary);
+}
+
+.navbar-dark .nav-link {
+  transition: color 0.15s ease;
+}
+
+/* ---------------------------------------------------------------
+   Botones primarios: texto oscuro sobre el acento para buen contraste
+   (el acento es claro/saturado, no oscuro como el azul por defecto).
+   --------------------------------------------------------------- */
+.btn-primary {
+  --bs-btn-color: #131217;
+  --bs-btn-hover-color: #131217;
+  --bs-btn-active-color: #131217;
+  font-weight: 600;
+}
+
+.btn {
+  font-weight: 500;
 }

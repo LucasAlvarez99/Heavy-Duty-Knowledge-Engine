@@ -260,7 +260,7 @@ export function RoutineFormPage() {
           <div className="mb-4">
             <h2 className="h5 mb-3">Sugerencias de adaptacion</h2>
             <p className="text-body-secondary small">
-              Basadas en el Progress Engine (Fase 4). No se aplican solas: revisalas y decidi.
+              Basadas en tu progreso reciente. No se aplican solas: revisalas y decidi.
             </p>
             {suggestions.map((suggestion, index) => {
               if (dismissedSuggestions.includes(index)) return null

@@ -1,15 +1,14 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import { useDisplayName } from '../hooks/useDisplayName'
 
 export function DashboardPage() {
-  const { user } = useAuth()
+  const displayName = useDisplayName()
 
   return (
     <div className="container py-4">
-      <h1 className="h3 mb-1">Hola{user?.email ? `, ${user.email}` : ''}</h1>
+      <h1 className="h3 mb-1">Hola, {displayName}</h1>
       <p className="text-body-secondary mb-4">
-        Este es el panel base de la Fase 2. Los motores de progreso, recuperacion y nutricion se
-        conectan aca a partir de la Fase 4 en adelante.
+        Rutinas, entrenamientos y tu evolucion de fuerza, todo en un mismo lugar.
       </p>
 
       <div className="row g-3">
@@ -17,7 +16,7 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-clipboard2-pulse me-2" aria-hidden="true" />
+                <i className="bi bi-clipboard2-pulse me-2 text-primary" aria-hidden="true" />
                 Rutinas
               </h2>
               <p className="card-text">Crear y editar tus rutinas de entrenamiento.</p>
@@ -32,7 +31,7 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-journal-check me-2" aria-hidden="true" />
+                <i className="bi bi-journal-check me-2 text-primary" aria-hidden="true" />
                 Entrenamientos
               </h2>
               <p className="card-text">
@@ -49,7 +48,7 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-graph-up-arrow me-2" aria-hidden="true" />
+                <i className="bi bi-graph-up-arrow me-2 text-primary" aria-hidden="true" />
                 Fuerza
               </h2>
               <p className="card-text">
@@ -66,7 +65,7 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-activity me-2" aria-hidden="true" />
+                <i className="bi bi-activity me-2 text-primary" aria-hidden="true" />
                 Progreso
               </h2>
               <p className="card-text">
@@ -83,8 +82,8 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-person-vcard me-2" aria-hidden="true" />
-                Perfil del atleta
+                <i className="bi bi-person-vcard me-2 text-primary" aria-hidden="true" />
+                Mi perfil
               </h2>
               <p className="card-text">
                 Cargar o actualizar tus datos biometricos, nivel de experiencia y objetivo.
@@ -100,7 +99,7 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
-                <i className="bi bi-list-check me-2" aria-hidden="true" />
+                <i className="bi bi-list-check me-2 text-primary" aria-hidden="true" />
                 Catalogo de ejercicios
               </h2>
               <p className="card-text">
