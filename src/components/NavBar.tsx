@@ -56,6 +56,11 @@ export function NavBar() {
                 </NavLink>
               </li>
               <li className="nav-item">
+                <NavLink to="/progreso" className={linkClass}>
+                  Progreso
+                </NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink to="/ejercicios" className={linkClass}>
                   Ejercicios
                 </NavLink>

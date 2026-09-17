@@ -66,6 +66,23 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
+                <i className="bi bi-activity me-2" aria-hidden="true" />
+                Progreso
+              </h2>
+              <p className="card-text">
+                Estado, tendencia y Confidence Score por ejercicio segun tu historial.
+              </p>
+              <Link to="/progreso" className="btn btn-outline-primary btn-sm">
+                Ver progreso
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card h-100">
+            <div className="card-body">
+              <h2 className="h5 card-title">
                 <i className="bi bi-person-vcard me-2" aria-hidden="true" />
                 Perfil del atleta
               </h2>

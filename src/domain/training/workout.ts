@@ -84,7 +84,9 @@ export function validateWorkoutInput(input: WorkoutInput): string[] {
 /**
  * Volumen total de una serie: peso x repeticiones. Suma simple, sin
  * ponderar por intensidad (eso lo hara el Progress Engine en la Fase 4).
+ * Solo pide peso y repeticiones a proposito: cualquier fuente de series
+ * (un WorkoutInput completo, o una fila cruda de la DB) sirve sin adaptar.
  */
-export function totalVolumeKg(sets: SetInput[]): number {
+export function totalVolumeKg(sets: Pick<SetInput, 'weightKg' | 'repetitions'>[]): number {
   return sets.reduce((sum, set) => sum + set.weightKg * set.repetitions, 0)
 }

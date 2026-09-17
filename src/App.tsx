@@ -41,6 +41,14 @@ const ExerciseStrengthDetailPage = lazy(() =>
     default: m.ExerciseStrengthDetailPage,
   })),
 )
+const ProgressPage = lazy(() =>
+  import('./features/progress/ProgressPage').then((m) => ({ default: m.ProgressPage })),
+)
+const ExerciseProgressPage = lazy(() =>
+  import('./features/progress/ExerciseProgressPage').then((m) => ({
+    default: m.ExerciseProgressPage,
+  })),
+)
 const DashboardPage = lazy(() =>
   import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
 )
@@ -152,6 +160,22 @@ function App() {
                 element={
                   <RequireAuth>
                     <ExerciseStrengthDetailPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/progreso"
+                element={
+                  <RequireAuth>
+                    <ProgressPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/progreso/:exerciseId"
+                element={
+                  <RequireAuth>
+                    <ExerciseProgressPage />
                   </RequireAuth>
                 }
               />
