@@ -24,6 +24,9 @@ const RoutinesListPage = lazy(() =>
 const RoutineFormPage = lazy(() =>
   import('./features/routines/RoutineFormPage').then((m) => ({ default: m.RoutineFormPage })),
 )
+const GenerateRoutinePage = lazy(() =>
+  import('./features/routines/GenerateRoutinePage').then((m) => ({ default: m.GenerateRoutinePage })),
+)
 const WorkoutLoggerPage = lazy(() =>
   import('./features/workouts/WorkoutLoggerPage').then((m) => ({ default: m.WorkoutLoggerPage })),
 )
@@ -112,6 +115,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <RoutineFormPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/rutinas/generar"
+                element={
+                  <RequireAuth>
+                    <GenerateRoutinePage />
                   </RequireAuth>
                 }
               />

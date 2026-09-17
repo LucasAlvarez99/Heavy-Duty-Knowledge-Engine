@@ -40,9 +40,14 @@ export function RoutinesListPage() {
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="h3 mb-0">Mis rutinas</h1>
-        <Link to="/rutinas/nueva" className="btn btn-primary">
-          Nueva rutina
-        </Link>
+        <div className="d-flex gap-2">
+          <Link to="/rutinas/generar" className="btn btn-outline-primary">
+            Generar automaticamente
+          </Link>
+          <Link to="/rutinas/nueva" className="btn btn-primary">
+            Nueva rutina
+          </Link>
+        </div>
       </div>
 
       {loading && (

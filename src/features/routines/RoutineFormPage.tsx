@@ -13,6 +13,8 @@ import { reorderExercises, validateRoutineInput } from '../../domain/training/ro
 import type { RoutineExerciseInput, RoutineInput, RoutineWithExercises } from '../../domain/training/routine'
 import type { Exercise } from '../../domain/training/exercise'
 import { EXPERIENCE_LEVEL_LABEL, TRAINING_GOAL_LABEL } from '../../domain/training/athleteProfile'
+import { getAdaptationSuggestionsForRoutine } from '../../services/adaptiveTrainingService'
+import type { AdaptationSuggestion } from '../../engines/adaptation/adaptationEngine'
 
 const EMPTY_INPUT: RoutineInput = {
   name: '',
@@ -20,6 +22,12 @@ const EMPTY_INPUT: RoutineInput = {
   level: 'beginner',
   notes: '',
   exercises: [],
+}
+
+const FIELD_LABEL: Record<AdaptationSuggestion['field'], string> = {
+  targetSets: 'Series',
+  targetReps: 'Reps',
+  targetRir: 'RIR',
 }
 
 function emptyExerciseRow(orderIndex: number, defaultExerciseId: string): RoutineExerciseInput {
@@ -56,6 +64,15 @@ export function RoutineFormPage() {
       [routineId],
       null,
     )
+
+  const { data: suggestions, loading: loadingSuggestions } = useAsyncData<AdaptationSuggestion[]>(
+    () =>
+      user && routineId ? getAdaptationSuggestionsForRoutine(user.id, routineId) : Promise.resolve([]),
+    [user, routineId],
+    [],
+  )
+  const [dismissedSuggestions, setDismissedSuggestions] = useState<number[]>([])
+  const visibleSuggestions = suggestions.filter((_, index) => !dismissedSuggestions.includes(index))
 
   // Precarga el formulario cuando llega la rutina a editar. Ver la nota
   // equivalente en ProfilePage: es una sincronizacion valida de estado
@@ -99,6 +116,26 @@ export function RoutineFormPage() {
       ...prev,
       exercises: prev.exercises.map((exercise, i) => (i === index ? { ...exercise, ...patch } : exercise)),
     }))
+  }
+
+  function applySuggestion(suggestionIndex: number, suggestion: AdaptationSuggestion) {
+    setForm((prev) => ({
+      ...prev,
+      exercises: prev.exercises.map((exercise) =>
+        exercise.exerciseId === suggestion.exerciseId
+          ? { ...exercise, [suggestion.field]: suggestion.suggestedValue }
+          : exercise,
+      ),
+    }))
+    setDismissedSuggestions((prev) => [...prev, suggestionIndex])
+  }
+
+  function dismissSuggestion(suggestionIndex: number) {
+    setDismissedSuggestions((prev) => [...prev, suggestionIndex])
+  }
+
+  function exerciseName(exerciseId: string): string {
+    return exercises.find((exercise) => exercise.id === exerciseId)?.name ?? 'Ejercicio'
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -218,6 +255,45 @@ export function RoutineFormPage() {
             />
           </div>
         </div>
+
+        {isEditing && !loadingSuggestions && visibleSuggestions.length > 0 && (
+          <div className="mb-4">
+            <h2 className="h5 mb-3">Sugerencias de adaptacion</h2>
+            <p className="text-body-secondary small">
+              Basadas en el Progress Engine (Fase 4). No se aplican solas: revisalas y decidi.
+            </p>
+            {suggestions.map((suggestion, index) => {
+              if (dismissedSuggestions.includes(index)) return null
+              return (
+                <div className="alert alert-light border d-flex justify-content-between align-items-center gap-3" key={index}>
+                  <div>
+                    <strong>{exerciseName(suggestion.exerciseId)}</strong>: {suggestion.reason}
+                    <div className="small text-body-secondary">
+                      {FIELD_LABEL[suggestion.field]} {suggestion.currentValue ?? '-'} →{' '}
+                      {suggestion.suggestedValue}
+                    </div>
+                  </div>
+                  <div className="d-flex gap-2 flex-shrink-0">
+                    <button
+                      type="button"
+                      className="btn btn-outline-success btn-sm"
+                      onClick={() => applySuggestion(index, suggestion)}
+                    >
+                      Aplicar
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => dismissSuggestion(index)}
+                    >
+                      Descartar
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="h5 mb-0">Ejercicios</h2>
