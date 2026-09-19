@@ -52,6 +52,9 @@ const ExerciseProgressPage = lazy(() =>
     default: m.ExerciseProgressPage,
   })),
 )
+const KnowledgePage = lazy(() =>
+  import('./features/knowledge/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
+)
 const DashboardPage = lazy(() =>
   import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
 )
@@ -187,6 +190,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <ExerciseProgressPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/conocimiento"
+                element={
+                  <RequireAuth>
+                    <KnowledgePage />
                   </RequireAuth>
                 }
               />

@@ -104,6 +104,11 @@ export function NavBar() {
                   Ejercicios
                 </NavLink>
               </li>
+              <li className="nav-item">
+                <NavLink to="/conocimiento" className={linkClass}>
+                  Conocimiento
+                </NavLink>
+              </li>
             </ul>
           )}
 

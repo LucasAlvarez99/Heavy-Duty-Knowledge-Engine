@@ -99,6 +99,23 @@ export function DashboardPage() {
           <div className="card h-100">
             <div className="card-body">
               <h2 className="h5 card-title">
+                <i className="bi bi-book me-2 text-primary" aria-hidden="true" />
+                Biblioteca de conocimiento
+              </h2>
+              <p className="card-text">
+                Principios y rutinas historicas de Heavy Duty, con cita a la fuente original.
+              </p>
+              <Link to="/conocimiento" className="btn btn-outline-primary btn-sm">
+                Explorar
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card h-100">
+            <div className="card-body">
+              <h2 className="h5 card-title">
                 <i className="bi bi-list-check me-2 text-primary" aria-hidden="true" />
                 Catalogo de ejercicios
               </h2>
